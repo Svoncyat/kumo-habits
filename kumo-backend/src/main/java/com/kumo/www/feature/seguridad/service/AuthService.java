@@ -79,12 +79,10 @@ public class AuthService {
         usuarioRolRepository.save(usuarioRol);
         usuarioGuardado.getRoles().add(usuarioRol);
 
-        PreferenciasUsuario preferencias = PreferenciasUsuario.builder()
-                .usuarioId(usuarioGuardado.getId())
-                .usuario(usuarioGuardado)
-                .zonaHoraria(obtenerZonaHoraria(request))
-                .formatoFecha(obtenerFormatoFecha(request))
-                .build();
+        PreferenciasUsuario preferencias = new PreferenciasUsuario();
+        preferencias.setUsuario(usuarioGuardado);
+        preferencias.setZonaHoraria(obtenerZonaHoraria(request));
+        preferencias.setFormatoFecha(obtenerFormatoFecha(request));
         preferenciasUsuarioRepository.save(preferencias);
         usuarioGuardado.setPreferencias(preferencias);
 

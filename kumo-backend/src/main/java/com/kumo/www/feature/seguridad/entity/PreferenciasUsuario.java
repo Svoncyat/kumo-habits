@@ -3,14 +3,13 @@ package com.kumo.www.feature.seguridad.entity;
 import com.kumo.www.feature.seguridad.entity.enums.FormatoFecha;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.ColumnTransformer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -41,7 +40,9 @@ public class PreferenciasUsuario {
     @Column(name = "zona_horaria", nullable = false, length = 100)
     private String zonaHoraria;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "formato_fecha", nullable = false, length = 20)
+    // Usamos AttributeConverter para mapear etiquetas y ColumnTransformer para
+    // castear a tipo Postgres
+    @Column(name = "formato_fecha", nullable = false, columnDefinition = "formato_fecha")
+    @ColumnTransformer(write = "?::formato_fecha")
     private FormatoFecha formatoFecha;
 }

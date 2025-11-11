@@ -19,6 +19,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "solicitudes_exportacion")
@@ -40,7 +42,8 @@ public class SolicitudExportacion {
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false, length = 50)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "estado", nullable = false, columnDefinition = "estado_exportacion")
     private EstadoExportacion estado;
 
     @Column(name = "url_descarga", columnDefinition = "text")

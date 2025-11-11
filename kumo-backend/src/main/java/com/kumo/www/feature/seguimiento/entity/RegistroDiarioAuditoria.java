@@ -24,6 +24,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "registros_diarios_auditoria", indexes = {
@@ -43,7 +45,8 @@ public class RegistroDiarioAuditoria {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_operacion", nullable = false, length = 20)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "tipo_operacion", nullable = false, columnDefinition = "tipo_operacion_auditoria")
     private TipoOperacionAuditoria tipoOperacion;
 
     @Column(name = "registro_id")

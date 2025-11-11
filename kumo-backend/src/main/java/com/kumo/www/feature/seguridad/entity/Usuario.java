@@ -27,6 +27,8 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "usuarios", indexes = {
@@ -58,7 +60,8 @@ public class Usuario implements UserDetails {
     private String claveHash;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false, length = 50)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "estado", nullable = false, columnDefinition = "estado_usuario")
     private EstadoUsuario estado;
 
     @Column(name = "fecha_creacion", nullable = false)

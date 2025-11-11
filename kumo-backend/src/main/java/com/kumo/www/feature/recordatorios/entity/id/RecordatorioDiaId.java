@@ -7,6 +7,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import java.io.Serializable;
 import java.util.Objects;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Embeddable
 public class RecordatorioDiaId implements Serializable {
@@ -15,7 +17,8 @@ public class RecordatorioDiaId implements Serializable {
     private Long recordatorioId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "dia")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "dia", columnDefinition = "dia_semana")
     private DiaSemana dia;
 
     public RecordatorioDiaId() {
