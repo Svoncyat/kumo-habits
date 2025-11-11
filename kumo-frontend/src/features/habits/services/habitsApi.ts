@@ -1,8 +1,28 @@
-import { api } from '../../../core/api/client'
+import { apiClient } from '../../../core/api/client'
+import type { Habito, CreateHabitoDto, UpdateHabitoDto } from '../../../core/types/domain'
 
-export type Habit = { id: number; nombre: string; descripcion?: string | null }
+export const habitsApi = {
+    list: async (): Promise<Habito[]> => {
+        const { data } = await apiClient.get<Habito[]>('/api/habitos')
+        return data
+    },
 
-export async function listHabits(): Promise<Habit[]> {
-    const res = await api.get('/api/habitos')
-    return res.data
+    getById: async (id: number): Promise<Habito> => {
+        const { data } = await apiClient.get<Habito>(`/api/habitos/${id}`)
+        return data
+    },
+
+    create: async (dto: CreateHabitoDto): Promise<Habito> => {
+        const { data } = await apiClient.post<Habito>('/api/habitos', dto)
+        return data
+    },
+
+    update: async (id: number, dto: UpdateHabitoDto): Promise<Habito> => {
+        const { data } = await apiClient.put<Habito>(`/api/habitos/${id}`, dto)
+        return data
+    },
+
+    delete: async (id: number): Promise<void> => {
+        await apiClient.delete(`/api/habitos/${id}`)
+    },
 }

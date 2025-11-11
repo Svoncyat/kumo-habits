@@ -5,6 +5,7 @@ import { HabitsListPage } from '../features/habits/pages/HabitsListPage'
 import { HabitDetailPage } from '../features/habits/pages/HabitDetailPage'
 import { ProfilePage } from '../features/profile/pages/ProfilePage'
 import { ProtectedRoute } from '../core/routing/ProtectedRoute'
+import { MainLayout } from '../core/layout/MainLayout'
 
 export const router = createBrowserRouter([
     { path: '/', element: <Navigate to="/habitos" replace /> },
@@ -14,9 +15,14 @@ export const router = createBrowserRouter([
         path: '/',
         element: <ProtectedRoute />,
         children: [
-            { path: '/habitos', element: <HabitsListPage /> },
-            { path: '/habitos/:id', element: <HabitDetailPage /> },
-            { path: '/perfil', element: <ProfilePage /> },
+            {
+                element: <MainLayout />,
+                children: [
+                    { path: '/habitos', element: <HabitsListPage /> },
+                    { path: '/habitos/:id', element: <HabitDetailPage /> },
+                    { path: '/perfil', element: <ProfilePage /> },
+                ],
+            },
         ],
     },
 ])

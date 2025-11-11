@@ -1,4 +1,4 @@
-import { api } from '../../../core/api/client'
+import { apiClient } from '../../../core/api/client'
 import { z } from 'zod'
 
 export const loginSchema = z.object({
@@ -10,7 +10,7 @@ export type LoginRequest = z.infer<typeof loginSchema>
 export type AuthResponse = { token: string; tipoToken: string; expiraEn: string }
 
 export async function login(data: LoginRequest): Promise<AuthResponse> {
-    const res = await api.post('/api/auth/login', data)
+    const res = await apiClient.post('/api/auth/login', data)
     return res.data
 }
 
@@ -23,6 +23,6 @@ export const registerSchema = z.object({
 export type RegisterRequest = z.infer<typeof registerSchema>
 
 export async function register(data: RegisterRequest): Promise<AuthResponse> {
-    const res = await api.post('/api/auth/register', data)
+    const res = await apiClient.post('/api/auth/register', data)
     return res.data
 }

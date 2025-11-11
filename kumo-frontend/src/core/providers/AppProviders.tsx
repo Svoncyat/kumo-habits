@@ -1,15 +1,22 @@
-import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
-import { QueryClientProvider } from '@tanstack/react-query'
-import type { ReactNode } from 'react'
-import { queryClient } from '../query/queryClient'
-import { AuthProvider } from '../../features/auth/context/AuthContext'
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "../query/queryClient";
+import { AuthProvider } from "../../features/auth/context/AuthContext";
+import { ToasterProvider } from "./ToasterProvider";
 
-export function AppProviders({ children }: { children: ReactNode }) {
+interface AppProvidersProps {
+    children: React.ReactNode;
+}
+
+export const AppProviders = ({ children }: AppProvidersProps) => {
     return (
         <ChakraProvider value={defaultSystem}>
             <QueryClientProvider client={queryClient}>
-                <AuthProvider>{children}</AuthProvider>
+                <AuthProvider>
+                    <ToasterProvider />
+                    {children}
+                </AuthProvider>
             </QueryClientProvider>
         </ChakraProvider>
-    )
-}
+    );
+};
