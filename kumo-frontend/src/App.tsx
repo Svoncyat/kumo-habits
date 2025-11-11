@@ -9,6 +9,7 @@ import DashboardPage from './react-pages/DashboardPage';
 import HabitosPage from './react-pages/HabitosPage';
 import MetricasPage from './react-pages/MetricasPage';
 import PerfilPage from './react-pages/PerfilPage';
+import ColoresDemoPage from './react-pages/ColoresDemoPage';
 
 // Protected Route Component
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -102,6 +103,9 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* Demo de colores (accesible sin autenticación para testing) */}
+      <Route path="/colores-demo" element={<ColoresDemoPage />} />
 
       {/* Default redirect */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />

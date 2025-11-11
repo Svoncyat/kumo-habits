@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
+import RachaIndicator from '@/components/ui/RachaIndicator';
 import { TrendingUp, Target, Award, Calendar, Flame } from 'lucide-react';
 import { habitosService } from '@/services/habitos.service';
 import { metricasService } from '@/services/metricas.service';
@@ -157,7 +158,7 @@ export default function MetricasPage() {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {habito.categorias.map((cat) => (
-                        <Badge key={cat.id} variant="info">
+                        <Badge key={cat.id} customColor={cat.color}>
                           {cat.nombre}
                         </Badge>
                       ))}
@@ -167,43 +168,42 @@ export default function MetricasPage() {
 
                 <CardContent>
                   {metricas ? (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="text-center p-4 bg-blue-50 rounded-lg">
-                        <Flame className="h-6 w-6 text-orange-600 mx-auto mb-2" />
-                        <p className="text-2xl font-bold text-gray-900">
-                          {metricas.rachaMasLarga}
-                        </p>
-                        <p className="text-sm text-gray-600">Racha máxima</p>
+                    <div className="space-y-6">
+                      {/* RF-RAC-CAL-005: Indicador de racha con icono de fuego */}
+                      <div className="flex justify-center">
+                        <RachaIndicator rachaActual={metricas.rachaMasLarga} size="lg" />
                       </div>
 
-                      <div className="text-center p-4 bg-green-50 rounded-lg">
-                        <Calendar className="h-6 w-6 text-green-600 mx-auto mb-2" />
-                        <p className="text-2xl font-bold text-gray-900">
-                          {metricas.totalDiasCumplidos}
-                        </p>
-                        <p className="text-sm text-gray-600">Días cumplidos</p>
-                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div className="text-center p-4 bg-cumplido-50 rounded-lg border-2 border-cumplido-200">
+                          <Calendar className="h-6 w-6 text-cumplido-600 mx-auto mb-2" />
+                          <p className="text-2xl font-bold text-gray-900">
+                            {metricas.totalDiasCumplidos}
+                          </p>
+                          <p className="text-sm text-gray-600">Días cumplidos</p>
+                        </div>
 
-                      <div className="text-center p-4 bg-purple-50 rounded-lg">
-                        <Award className="h-6 w-6 text-purple-600 mx-auto mb-2" />
-                        <p className="text-2xl font-bold text-gray-900">
-                          {metricas.totalValorAcumulado.toFixed(0)}
-                        </p>
-                        <p className="text-sm text-gray-600">Valor acumulado</p>
-                      </div>
+                        <div className="text-center p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
+                          <Award className="h-6 w-6 text-purple-600 mx-auto mb-2" />
+                          <p className="text-2xl font-bold text-gray-900">
+                            {metricas.totalValorAcumulado.toFixed(0)}
+                          </p>
+                          <p className="text-sm text-gray-600">Valor acumulado</p>
+                        </div>
 
-                      <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                        <TrendingUp className="h-6 w-6 text-yellow-600 mx-auto mb-2" />
-                        <p className="text-2xl font-bold text-gray-900">
-                          {metricas.totalDiasCumplidos > 0
-                            ? Math.round(
-                                (metricas.totalValorAcumulado /
-                                  metricas.totalDiasCumplidos) *
-                                  10
-                              ) / 10
-                            : 0}
-                        </p>
-                        <p className="text-sm text-gray-600">Promedio diario</p>
+                        <div className="text-center p-4 bg-yellow-50 rounded-lg border-2 border-yellow-200">
+                          <TrendingUp className="h-6 w-6 text-yellow-600 mx-auto mb-2" />
+                          <p className="text-2xl font-bold text-gray-900">
+                            {metricas.totalDiasCumplidos > 0
+                              ? Math.round(
+                                  (metricas.totalValorAcumulado /
+                                    metricas.totalDiasCumplidos) *
+                                    10
+                                ) / 10
+                              : 0}
+                          </p>
+                          <p className="text-sm text-gray-600">Promedio diario</p>
+                        </div>
                       </div>
                     </div>
                   ) : (
