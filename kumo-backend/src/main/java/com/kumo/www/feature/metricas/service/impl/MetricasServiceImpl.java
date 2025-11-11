@@ -14,8 +14,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +59,7 @@ public class MetricasServiceImpl implements MetricasService {
 
     private void recalcularMetricasParaHabito(Habito habito) {
         List<RegistroDiario> registros = registroDiarioRepository
-                .findByHabito_IdOrderByFechaRegistroDesc(habito.getId());
+                .findByHabito_IdOrderByFechaRegistroAsc(habito.getId());
 
         BigDecimal totalValor = registros.stream()
                 .map(RegistroDiario::getValorRegistrado)
@@ -95,14 +93,11 @@ public class MetricasServiceImpl implements MetricasService {
             return 0;
         }
 
-        List<RegistroDiario> ordenados = new ArrayList<>(registros);
-        ordenados.sort(Comparator.comparing(RegistroDiario::getFechaRegistro));
-
         int rachaActual = 0;
         int rachaMaxima = 0;
         LocalDate ultimaFechaCumplida = null;
 
-        for (RegistroDiario registro : ordenados) {
+        for (RegistroDiario registro : registros) {
             if (!registro.isEstaCumplido()) {
                 rachaActual = 0;
                 ultimaFechaCumplida = null;

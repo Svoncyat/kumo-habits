@@ -1,5 +1,5 @@
 -- Datos semilla para el módulo de seguridad.
--- Todas las contraseñas corresponden al hash bcrypt de "password123".
+-- Todas las contraseñas corresponden al hash bcrypt de "demo123".
 
 -- Roles base requeridos por Spring Security.
 INSERT INTO roles (nombre) VALUES
@@ -13,12 +13,12 @@ ON CONFLICT (nombre) DO NOTHING;
 -- Usuarios iniciales del sistema.
 INSERT INTO usuarios (nombre, avatar_url, email, clave_hash, estado, fecha_creacion, fecha_modificacion)
 VALUES
-  ('Ana Lopez', 'https://cdn.kumo.dev/avatars/ana.png', 'ana.lopez@kumo.com', '$2a$10$7fYY1R3uXCGgirjRaF2pXOGzjxqn3WFPCYalJbr6IGDGAlZKbufuu', 'ACTIVO', CURRENT_TIMESTAMP - INTERVAL '90 days', CURRENT_TIMESTAMP - INTERVAL '2 days'),
-    ('Bruno Pari', 'https://cdn.kumo.dev/avatars/bruno.png', 'bruno.pari@kumo.com', '$2a$10$7fYY1R3uXCGgirjRaF2pXOGzjxqn3WFPCYalJbr6IGDGAlZKbufuu', 'ACTIVO', CURRENT_TIMESTAMP - INTERVAL '75 days', CURRENT_TIMESTAMP - INTERVAL '3 days'),
-    ('Carla Mendoza', 'https://cdn.kumo.dev/avatars/carla.png', 'carla.mendoza@kumo.com', '$2a$10$7fYY1R3uXCGgirjRaF2pXOGzjxqn3WFPCYalJbr6IGDGAlZKbufuu', 'PENDIENTE_VERIFICACION', CURRENT_TIMESTAMP - INTERVAL '20 days', NULL),
-  ('Diego Torres', 'https://cdn.kumo.dev/avatars/diego.png', 'diego.torres@kumo.com', '$2a$10$7fYY1R3uXCGgirjRaF2pXOGzjxqn3WFPCYalJbr6IGDGAlZKbufuu', 'ACTIVO', CURRENT_TIMESTAMP - INTERVAL '60 days', CURRENT_TIMESTAMP - INTERVAL '1 day'),
-  ('Elena Ramos', 'https://cdn.kumo.dev/avatars/elena.png', 'elena.ramos@kumo.com', '$2a$10$7fYY1R3uXCGgirjRaF2pXOGzjxqn3WFPCYalJbr6IGDGAlZKbufuu', 'BLOQUEADO', CURRENT_TIMESTAMP - INTERVAL '110 days', CURRENT_TIMESTAMP - INTERVAL '5 days'),
-  ('Usuario Demo', NULL, 'test@kumo.com', '$2a$10$7fYY1R3uXCGgirjRaF2pXOGzjxqn3WFPCYalJbr6IGDGAlZKbufuu', 'ACTIVO', CURRENT_TIMESTAMP - INTERVAL '7 days', CURRENT_TIMESTAMP - INTERVAL '1 day')
+  ('Ana Lopez', 'https://cdn.kumo.dev/avatars/ana.png', 'ana.lopez@kumo.com', '$2a$10$.VTbUPug.CwBqEurWC/1GuCBAaZAK4ZBsbqwXFcWKpev31J/JvGQK', 'ACTIVO', CURRENT_TIMESTAMP - INTERVAL '90 days', CURRENT_TIMESTAMP - INTERVAL '2 days'),
+    ('Bruno Pari', 'https://cdn.kumo.dev/avatars/bruno.png', 'bruno.pari@kumo.com', '$2a$10$.VTbUPug.CwBqEurWC/1GuCBAaZAK4ZBsbqwXFcWKpev31J/JvGQK', 'ACTIVO', CURRENT_TIMESTAMP - INTERVAL '75 days', CURRENT_TIMESTAMP - INTERVAL '3 days'),
+    ('Carla Mendoza', 'https://cdn.kumo.dev/avatars/carla.png', 'carla.mendoza@kumo.com', '$2a$10$.VTbUPug.CwBqEurWC/1GuCBAaZAK4ZBsbqwXFcWKpev31J/JvGQK', 'PENDIENTE_VERIFICACION', CURRENT_TIMESTAMP - INTERVAL '20 days', NULL),
+  ('Diego Torres', 'https://cdn.kumo.dev/avatars/diego.png', 'diego.torres@kumo.com', '$2a$10$.VTbUPug.CwBqEurWC/1GuCBAaZAK4ZBsbqwXFcWKpev31J/JvGQK', 'ACTIVO', CURRENT_TIMESTAMP - INTERVAL '60 days', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+  ('Elena Ramos', 'https://cdn.kumo.dev/avatars/elena.png', 'elena.ramos@kumo.com', '$2a$10$.VTbUPug.CwBqEurWC/1GuCBAaZAK4ZBsbqwXFcWKpev31J/JvGQK', 'BLOQUEADO', CURRENT_TIMESTAMP - INTERVAL '110 days', CURRENT_TIMESTAMP - INTERVAL '5 days'),
+  ('Usuario Demo', NULL, 'test@kumo.com', '$2a$10$.VTbUPug.CwBqEurWC/1GuCBAaZAK4ZBsbqwXFcWKpev31J/JvGQK', 'ACTIVO', CURRENT_TIMESTAMP - INTERVAL '7 days', CURRENT_TIMESTAMP - INTERVAL '1 day')
 ON CONFLICT (email) DO NOTHING;
 
 -- Preferencias de usuario (1:1 con usuarios).

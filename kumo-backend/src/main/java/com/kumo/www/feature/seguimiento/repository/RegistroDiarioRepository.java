@@ -14,5 +14,7 @@ public interface RegistroDiarioRepository extends JpaRepository<RegistroDiario, 
 
     List<RegistroDiario> findByHabito_IdOrderByFechaRegistroDesc(Long habitoId);
 
+    List<RegistroDiario> findByHabito_IdOrderByFechaRegistroAsc(Long habitoId);
+
     Optional<RegistroDiario> findByIdAndHabito_Usuario_Id(Long id, Long usuarioId);
 }
