@@ -2,6 +2,7 @@ package com.kumo.www.feature.seguimiento.service.impl;
 
 import com.kumo.www.feature.habitos.entity.Habito;
 import com.kumo.www.feature.habitos.repository.HabitoRepository;
+import com.kumo.www.feature.metricas.service.MetricasService;
 import com.kumo.www.feature.seguimiento.controller.dto.RegistroRequest;
 import com.kumo.www.feature.seguimiento.controller.dto.RegistroResponse;
 import com.kumo.www.feature.seguimiento.entity.RegistroDiario;
@@ -37,6 +38,7 @@ public class SeguimientoServiceImpl implements SeguimientoService {
     private final RegistroDiarioAuditoriaRepository registroDiarioAuditoriaRepository;
     private final HabitoRepository habitoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final MetricasService metricasService;
 
     @Override
     public RegistroResponse guardarRegistro(RegistroRequest request) {
@@ -82,6 +84,8 @@ public class SeguimientoServiceImpl implements SeguimientoService {
         registrarAuditoria(tipoOperacion, guardado.getId(), habito, usuario, fechaRegistro, valorAnterior,
                 cumplidoAnterior, guardado.getValorRegistrado(), guardado.isEstaCumplido(), ahora);
 
+        metricasService.recalcularMetricas(habito.getId());
+
         return mapearRegistro(guardado);
     }
 
@@ -110,6 +114,7 @@ public class SeguimientoServiceImpl implements SeguimientoService {
                 ahora);
 
         registroDiarioRepository.delete(registro);
+        metricasService.recalcularMetricas(habito.getId());
     }
 
     private Usuario obtenerUsuarioAutenticado() {
