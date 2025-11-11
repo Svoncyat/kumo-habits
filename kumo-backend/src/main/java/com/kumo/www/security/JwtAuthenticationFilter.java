@@ -1,6 +1,5 @@
-package com.kumo.www.feature.seguridad.config;
+package com.kumo.www.security;
 
-import com.kumo.www.feature.seguridad.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

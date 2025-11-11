@@ -1,4 +1,4 @@
-package com.kumo.www.feature.seguridad.service;
+package com.kumo.www.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

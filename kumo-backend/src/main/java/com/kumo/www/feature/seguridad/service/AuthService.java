@@ -25,6 +25,7 @@ import com.kumo.www.feature.seguridad.entity.enums.FormatoFecha;
 import com.kumo.www.feature.seguridad.entity.id.UsuarioRolId;
 import com.kumo.www.feature.seguridad.repository.UsuarioRepository;
 import com.kumo.www.feature.seguridad.repository.UsuarioRolRepository;
+import com.kumo.www.security.JwtService;
 import com.kumo.www.feature.seguridad.repository.RolRepository;
 import com.kumo.www.feature.seguridad.repository.PreferenciasUsuarioRepository;
 import java.time.Instant;
