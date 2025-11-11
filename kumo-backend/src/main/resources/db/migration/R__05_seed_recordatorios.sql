@@ -114,67 +114,67 @@ WHERE u.email = 'elena.ramos@kumo.com'
 
 -- Historial de disparo de recordatorios.
 INSERT INTO registros_notificaciones (recordatorio_id, usuario_id, fecha_disparo, estado)
-SELECT r.id, h.usuario_id, TIMESTAMPTZ '2025-01-05 07:00:00+00', 'ENVIADO'
+SELECT r.id, h.usuario_id, CURRENT_TIMESTAMP - INTERVAL '2 days' + INTERVAL '7 hours', 'ENVIADO'
 FROM recordatorios r
 JOIN habitos h ON h.id = r.habito_id
 JOIN usuarios u ON u.id = h.usuario_id
 WHERE u.email = 'ana.lopez@kumo.com'
 	AND UPPER(h.nombre) = 'MEDITACION MATUTINA'
 	AND r.hora_recordatorio = TIME '07:00:00'
-	AND NOT EXISTS (
-		SELECT 1 FROM registros_notificaciones rn
-		WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = TIMESTAMPTZ '2025-01-05 07:00:00+00'
-	);
+		AND NOT EXISTS (
+			SELECT 1 FROM registros_notificaciones rn
+			WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = CURRENT_TIMESTAMP - INTERVAL '2 days' + INTERVAL '7 hours'
+		);
 
 INSERT INTO registros_notificaciones (recordatorio_id, usuario_id, fecha_disparo, estado)
-SELECT r.id, h.usuario_id, TIMESTAMPTZ '2025-01-04 20:30:00+00', 'ENVIADO'
+SELECT r.id, h.usuario_id, CURRENT_TIMESTAMP - INTERVAL '3 days' + INTERVAL '20 hours 30 minutes', 'ENVIADO'
 FROM recordatorios r
 JOIN habitos h ON h.id = r.habito_id
 JOIN usuarios u ON u.id = h.usuario_id
 WHERE u.email = 'ana.lopez@kumo.com'
 	AND UPPER(h.nombre) = 'CAMINATA NOCTURNA'
 	AND r.hora_recordatorio = TIME '20:30:00'
-	AND NOT EXISTS (
-		SELECT 1 FROM registros_notificaciones rn
-		WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = TIMESTAMPTZ '2025-01-04 20:30:00+00'
-	);
+		AND NOT EXISTS (
+			SELECT 1 FROM registros_notificaciones rn
+			WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = CURRENT_TIMESTAMP - INTERVAL '3 days' + INTERVAL '20 hours 30 minutes'
+		);
 
 INSERT INTO registros_notificaciones (recordatorio_id, usuario_id, fecha_disparo, estado)
-SELECT r.id, h.usuario_id, TIMESTAMPTZ '2025-01-03 06:00:00+00', 'ENVIADO'
+SELECT r.id, h.usuario_id, CURRENT_TIMESTAMP - INTERVAL '4 days' + INTERVAL '6 hours', 'ENVIADO'
 FROM recordatorios r
 JOIN habitos h ON h.id = r.habito_id
 JOIN usuarios u ON u.id = h.usuario_id
 WHERE u.email = 'bruno.pari@kumo.com'
 	AND UPPER(h.nombre) = 'PLANIFICACION DIARIA'
 	AND r.hora_recordatorio = TIME '06:00:00'
-	AND NOT EXISTS (
-		SELECT 1 FROM registros_notificaciones rn
-		WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = TIMESTAMPTZ '2025-01-03 06:00:00+00'
-	);
+		AND NOT EXISTS (
+			SELECT 1 FROM registros_notificaciones rn
+			WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = CURRENT_TIMESTAMP - INTERVAL '4 days' + INTERVAL '6 hours'
+		);
 
 INSERT INTO registros_notificaciones (recordatorio_id, usuario_id, fecha_disparo, estado)
-SELECT r.id, h.usuario_id, TIMESTAMPTZ '2025-01-06 19:30:00+00', 'FALLIDO'
+SELECT r.id, h.usuario_id, CURRENT_TIMESTAMP - INTERVAL '1 day' + INTERVAL '19 hours 30 minutes', 'FALLIDO'
 FROM recordatorios r
 JOIN habitos h ON h.id = r.habito_id
 JOIN usuarios u ON u.id = h.usuario_id
 WHERE u.email = 'diego.torres@kumo.com'
 	AND UPPER(h.nombre) = 'CURSO INGLES'
 	AND r.hora_recordatorio = TIME '19:30:00'
-	AND NOT EXISTS (
-		SELECT 1 FROM registros_notificaciones rn
-		WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = TIMESTAMPTZ '2025-01-06 19:30:00+00'
-	);
+		AND NOT EXISTS (
+			SELECT 1 FROM registros_notificaciones rn
+			WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = CURRENT_TIMESTAMP - INTERVAL '1 day' + INTERVAL '19 hours 30 minutes'
+		);
 
 INSERT INTO registros_notificaciones (recordatorio_id, usuario_id, fecha_disparo, estado)
-SELECT r.id, h.usuario_id, TIMESTAMPTZ '2025-01-02 21:30:00+00', 'ENVIADO'
+SELECT r.id, h.usuario_id, CURRENT_TIMESTAMP - INTERVAL '5 days' + INTERVAL '21 hours 30 minutes', 'ENVIADO'
 FROM recordatorios r
 JOIN habitos h ON h.id = r.habito_id
 JOIN usuarios u ON u.id = h.usuario_id
 WHERE u.email = 'elena.ramos@kumo.com'
 	AND UPPER(h.nombre) = 'DIARIO GRATITUD'
 	AND r.hora_recordatorio = TIME '21:30:00'
-	AND NOT EXISTS (
-		SELECT 1 FROM registros_notificaciones rn
-		WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = TIMESTAMPTZ '2025-01-02 21:30:00+00'
-	);
+		AND NOT EXISTS (
+			SELECT 1 FROM registros_notificaciones rn
+			WHERE rn.recordatorio_id = r.id AND rn.fecha_disparo = CURRENT_TIMESTAMP - INTERVAL '5 days' + INTERVAL '21 hours 30 minutes'
+		);
 
