@@ -42,13 +42,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (credentials: LoginRequest) => {
-    const response = await authService.login(credentials);
-    localStorage.setItem('kumo_token', response.token);
-    setToken(response.token);
+    console.log('AuthContext: Iniciando login...');
+    try {
+      const response = await authService.login(credentials);
+      console.log('AuthContext: Login response recibido', response);
+      
+      localStorage.setItem('kumo_token', response.token);
+      setToken(response.token);
+      console.log('AuthContext: Token guardado');
 
-    // Obtener datos del usuario
-    const userData = await perfilService.obtenerPerfil();
-    setUser(userData);
+      // Obtener datos del usuario
+      console.log('AuthContext: Obteniendo datos del perfil...');
+      const userData = await perfilService.obtenerPerfil();
+      console.log('AuthContext: Datos del usuario obtenidos', userData);
+      setUser(userData);
+    } catch (error) {
+      console.error('AuthContext: Error en login', error);
+      throw error;
+    }
   };
 
   const register = async (data: RegistroUsuarioRequest) => {

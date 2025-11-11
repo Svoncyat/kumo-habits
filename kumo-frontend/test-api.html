@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Kumo</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #0ea5e9;
+        }
+
+        button {
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #0284c7;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .error {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+            color: #991b1b;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 Test de API - Kumo Backend</h1>
+
+        <div>
+            <label>API URL:</label>
+            <input type="text" id="apiUrl" value="http://localhost:8080/api" />
+        </div>
+
+        <div>
+            <label>Email:</label>
+            <input type="email" id="email" value="ana.lopez@kumo.com" />
+        </div>
+
+        <div>
+            <label>Password:</label>
+            <input type="password" id="password" value="demo12345" />
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button onclick="testBackendHealth()">🏥 Test Health</button>
+            <button onclick="testLogin()">🔐 Test Login</button>
+            <button onclick="clearResults()">🗑️ Limpiar</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function showResult(message, isError = false) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result' + (isError ? ' error' : '');
+            resultDiv.textContent = message;
+        }
+
+        function clearResults() {
+            document.getElementById('result').textContent = '';
+        }
+
+        async function testBackendHealth() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            showResult('🔄 Verificando conexión con backend...');
+
+            try {
+                const response = await fetch(`${apiUrl.replace('/api', '')}/actuator/health`);
+                const data = await response.json();
+                showResult(`✅ Backend está activo!\n\nStatus: ${response.status}\nRespuesta:\n${JSON.stringify(data, null, 2)}`);
+            } catch (error) {
+                showResult(`❌ Error de conexión:\n${error.message}\n\n¿El backend está corriendo en http://localhost:8080?`, true);
+            }
+        }
+
+        async function testLogin() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            showResult('🔄 Intentando login...');
+
+            try {
+                const response = await fetch(`${apiUrl}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showResult(`✅ Login exitoso!\n\nStatus: ${response.status}\n\nToken:\n${data.token}\n\nTipo: ${data.tipoToken}\nExpira: ${data.expiraEn}`);
+
+                    // Guardar el token para futuras pruebas
+                    localStorage.setItem('kumo_token', data.token);
+                } else {
+                    showResult(`❌ Login falló\n\nStatus: ${response.status}\nRespuesta:\n${JSON.stringify(data, null, 2)}`, true);
+                }
+            } catch (error) {
+                showResult(`❌ Error en request:\n${error.message}\n\nVerifica que el backend esté corriendo y que CORS esté configurado.`, true);
+            }
+        }
+
+        // Auto-test al cargar
+        window.onload = () => {
+            console.log('Test API cargado. Usa los botones para probar la conexión.');
+        };
+    </script>
+</body>
+
+</html>

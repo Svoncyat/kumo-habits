@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Cloud, Mail, Lock, AlertCircle } from 'lucide-react';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
@@ -21,10 +21,16 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
+      console.log('Intentando login con:', { email });
       await login({ email, password });
+      console.log('Login exitoso, navegando a dashboard');
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+      console.error('Error en login:', err);
+      console.error('Response data:', err.response?.data);
+      console.error('Response status:', err.response?.status);
+      const errorMessage = err.response?.data?.message || err.message || 'Error al iniciar sesión. Verifica tus credenciales.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -94,9 +100,9 @@ export default function LoginPage() {
           <CardFooter className="flex-col gap-3">
             <div className="text-sm text-center text-gray-600">
               ¿No tienes una cuenta?{' '}
-              <a href="/register" className="font-medium text-primary-600 hover:text-primary-700">
+              <Link to="/register" className="font-medium text-primary-600 hover:text-primary-700">
                 Regístrate aquí
-              </a>
+              </Link>
             </div>
           </CardFooter>
         </Card>

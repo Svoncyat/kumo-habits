@@ -10,12 +10,21 @@ import type {
 // ==================== AUTH SERVICES ====================
 export const authService = {
   async login(data: LoginRequest): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>('/auth/login', data);
-    return response.data;
+    console.log('authService: Enviando request de login a /auth/login', data);
+    try {
+      const response = await apiClient.post<AuthResponse>('/auth/login', data);
+      console.log('authService: Login exitoso', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('authService: Error en login', error);
+      throw error;
+    }
   },
 
   async register(data: RegistroUsuarioRequest): Promise<AuthResponse> {
+    console.log('authService: Enviando request de registro a /auth/register');
     const response = await apiClient.post<AuthResponse>('/auth/register', data);
+    console.log('authService: Registro exitoso', response.data);
     return response.data;
   },
 

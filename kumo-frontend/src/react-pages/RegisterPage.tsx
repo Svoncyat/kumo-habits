@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Cloud, Mail, Lock, User as UserIcon, AlertCircle, CheckCircle } from 'lucide-react';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
@@ -160,9 +160,9 @@ export default function RegisterPage() {
           <CardFooter className="flex-col gap-3">
             <div className="text-sm text-center text-gray-600">
               ¿Ya tienes una cuenta?{' '}
-              <a href="/login" className="font-medium text-secondary-600 hover:text-secondary-700">
+              <Link to="/login" className="font-medium text-secondary-600 hover:text-secondary-700">
                 Inicia sesión
-              </a>
+              </Link>
             </div>
           </CardFooter>
         </Card>
