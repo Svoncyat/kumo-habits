@@ -180,9 +180,7 @@ Todas las páginas están optimizadas para:
 
 ### Frontend
 
-- **[INICIO_RAPIDO.md](kumo-frontend/INICIO_RAPIDO.md)** - Guía de inicio rápido
-- **[FRONTEND_README.md](kumo-frontend/FRONTEND_README.md)** - Documentación técnica
-- **[IMPLEMENTACION.md](kumo-frontend/IMPLEMENTACION.md)** - Detalles de implementación
+- **[FRONTEND_README.md](kumo-frontend/README.md)** - Documentación técnica
 
 ### Backend
 
