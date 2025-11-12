@@ -10,14 +10,16 @@ import { habitosService } from '@/services/habitos.service';
 import { recordatoriosService } from '@/services/recordatorios.service';
 import type { HabitoResponse, RecordatorioResponse, RecordatorioRequest } from '@/types/api';
 
-const DIAS_SEMANA = [
-  { id: 1, nombre: 'Lunes', abrev: 'L' },
-  { id: 2, nombre: 'Martes', abrev: 'M' },
-  { id: 3, nombre: 'Miércoles', abrev: 'X' },
-  { id: 4, nombre: 'Jueves', abrev: 'J' },
-  { id: 5, nombre: 'Viernes', abrev: 'V' },
-  { id: 6, nombre: 'Sábado', abrev: 'S' },
-  { id: 7, nombre: 'Domingo', abrev: 'D' },
+type DiaSemanaKey = 'LUNES' | 'MARTES' | 'MIERCOLES' | 'JUEVES' | 'VIERNES' | 'SABADO' | 'DOMINGO';
+
+const DIAS_SEMANA: Array<{ key: DiaSemanaKey; nombre: string; abrev: string }> = [
+  { key: 'LUNES', nombre: 'Lunes', abrev: 'L' },
+  { key: 'MARTES', nombre: 'Martes', abrev: 'M' },
+  { key: 'MIERCOLES', nombre: 'Miércoles', abrev: 'X' },
+  { key: 'JUEVES', nombre: 'Jueves', abrev: 'J' },
+  { key: 'VIERNES', nombre: 'Viernes', abrev: 'V' },
+  { key: 'SABADO', nombre: 'Sábado', abrev: 'S' },
+  { key: 'DOMINGO', nombre: 'Domingo', abrev: 'D' },
 ];
 
 interface HabitoConRecordatorios {
@@ -31,7 +33,7 @@ export default function RecordatoriosPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [habitoSeleccionado, setHabitoSeleccionado] = useState<number | null>(null);
   const [horaRecordatorio, setHoraRecordatorio] = useState('09:00');
-  const [diasSeleccionados, setDiasSeleccionados] = useState<number[]>([1, 2, 3, 4, 5]); // Lun-Vie por defecto
+  const [diasSeleccionados, setDiasSeleccionados] = useState<DiaSemanaKey[]>(['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES']); // Lun-Vie por defecto
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
@@ -68,16 +70,16 @@ export default function RecordatoriosPage() {
   const abrirModalNuevo = (habitoId: number) => {
     setHabitoSeleccionado(habitoId);
     setHoraRecordatorio('09:00');
-    setDiasSeleccionados([1, 2, 3, 4, 5]);
+    setDiasSeleccionados(['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES']);
     setError('');
     setIsModalOpen(true);
   };
 
-  const toggleDia = (diaId: number) => {
+  const toggleDia = (dia: DiaSemanaKey) => {
     setDiasSeleccionados(prev =>
-      prev.includes(diaId)
-        ? prev.filter(d => d !== diaId)
-        : [...prev, diaId].sort()
+      prev.includes(dia)
+        ? prev.filter(d => d !== dia)
+        : [...prev, dia]
     );
   };
 
@@ -100,7 +102,7 @@ export default function RecordatoriosPage() {
       const data: RecordatorioRequest = {
         habitoId: habitoSeleccionado,
         horaRecordatorio: horaRecordatorio + ':00',
-        diasSemana: diasSeleccionados,
+        dias: diasSeleccionados,
         estaActivo: true,
       };
 
@@ -139,9 +141,9 @@ export default function RecordatoriosPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">Cargando recordatorios...</div>
+        <Navbar currentPath="/recordatorios" />
+        <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600" />
         </div>
       </div>
     );
@@ -149,34 +151,66 @@ export default function RecordatoriosPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Recordatorios</h1>
-            <p className="text-gray-600 mt-1">
-              Configura notificaciones para tus hábitos
-            </p>
+      <Navbar currentPath="/recordatorios" />
+      
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <Bell className="h-8 w-8 text-primary-600" />
+                Recordatorios
+              </h1>
+              <p className="text-gray-600 mt-2">
+                Configura notificaciones para tus hábitos y nunca olvides completarlos
+              </p>
+            </div>
           </div>
         </div>
 
         {error && (
-          <div className="mb-4 p-4 bg-nocumplido-50 border border-nocumplido-200 text-nocumplido-800 rounded-lg">
-            {error}
+          <div className="mb-6 p-4 bg-nocumplido-50 border-l-4 border-nocumplido-500 text-nocumplido-800 rounded-r-lg">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-nocumplido-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium">{error}</p>
+              </div>
+            </div>
           </div>
         )}
 
-        <div className="space-y-4">
-          {habitosConRecordatorios.map(({ habito, recordatorios }) => (
-            <Card key={habito.id}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="flex items-center gap-2">
-                      <Bell className="w-5 h-5 text-primary-500" />
-                      {habito.nombre}
-                    </CardTitle>
-                    <CardDescription className="mt-1">
+        {habitosConRecordatorios.length === 0 ? (
+          <Card className="text-center py-16">
+            <CardContent>
+              <Bell className="h-20 w-20 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                No tienes hábitos activos
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Crea algunos hábitos primero para poder configurar recordatorios
+              </p>
+              <Button onClick={() => window.location.href = '/habitos'}>
+                <Plus className="w-4 h-4 mr-2" />
+                Ir a Hábitos
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-6">
+            {habitosConRecordatorios.map(({ habito, recordatorios }) => (
+              <Card key={habito.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <CardHeader className="bg-gradient-to-r from-primary-50 to-transparent border-b border-gray-100">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="flex items-center gap-2 text-xl mb-3">
+                        <Bell className="w-6 h-6 text-primary-600" />
+                        {habito.nombre}
+                      </CardTitle>
                       <div className="flex flex-wrap gap-2">
                         {habito.categorias.map((cat) => (
                           <Badge key={cat.id} customColor={cat.colorHex}>
@@ -184,143 +218,192 @@ export default function RecordatoriosPage() {
                           </Badge>
                         ))}
                       </div>
-                    </CardDescription>
+                    </div>
+                    <Button
+                      onClick={() => abrirModalNuevo(habito.id)}
+                      size="sm"
+                      className="shadow-sm"
+                    >
+                      <Plus className="w-4 h-4 mr-1" />
+                      Agregar
+                    </Button>
                   </div>
-                  <Button
-                    onClick={() => abrirModalNuevo(habito.id)}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Plus className="w-4 h-4 mr-1" />
-                    Nuevo
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {recordatorios.length === 0 ? (
-                  <p className="text-sm text-gray-500 italic">
-                    No hay recordatorios configurados
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {recordatorios.map((rec) => (
-                      <div
-                        key={rec.id}
-                        className={`flex items-center justify-between p-3 rounded-lg border ${
-                          rec.estaActivo
-                            ? 'bg-cumplido-50 border-cumplido-200'
-                            : 'bg-gray-50 border-gray-200 opacity-60'
-                        }`}
-                      >
-                        <div className="flex items-center gap-4 flex-1">
-                          <Clock className="w-5 h-5 text-gray-600" />
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              {rec.horaRecordatorio.substring(0, 5)}
-                            </p>
-                            <div className="flex gap-1 mt-1">
-                              {DIAS_SEMANA.map((dia) => (
-                                <span
-                                  key={dia.id}
-                                  className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium ${
-                                    rec.diasSemana.includes(dia.id)
-                                      ? 'bg-primary-500 text-white'
-                                      : 'bg-gray-200 text-gray-400'
-                                  }`}
-                                >
-                                  {dia.abrev}
-                                </span>
-                              ))}
+                </CardHeader>
+                
+                <CardContent className="pt-6">
+                  {recordatorios.length === 0 ? (
+                    <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                      <Clock className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                      <p className="text-sm text-gray-500 font-medium">
+                        No hay recordatorios configurados
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        Haz clic en "Agregar" para crear uno
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4">
+                      {recordatorios.map((rec) => (
+                        <div
+                          key={rec.id}
+                          className={`group relative flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                            rec.estaActivo
+                              ? 'bg-gradient-to-r from-cumplido-50 to-cumplido-25 border-cumplido-200 shadow-sm hover:shadow-md'
+                              : 'bg-gray-50 border-gray-200 opacity-70 hover:opacity-90'
+                          }`}
+                        >
+                          {/* Indicador de estado */}
+                          <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-xl ${
+                            rec.estaActivo ? 'bg-cumplido-500' : 'bg-gray-400'
+                          }`} />
+                          
+                          <div className="flex items-center gap-5 flex-1 ml-3">
+                            <div className={`flex items-center justify-center w-12 h-12 rounded-xl ${
+                              rec.estaActivo ? 'bg-primary-100' : 'bg-gray-200'
+                            }`}>
+                              <Clock className={`w-6 h-6 ${
+                                rec.estaActivo ? 'text-primary-600' : 'text-gray-500'
+                              }`} />
+                            </div>
+                            
+                            <div className="flex-1">
+                              <p className="text-lg font-bold text-gray-900 mb-2">
+                                {rec.horaRecordatorio.substring(0, 5)}
+                              </p>
+                              <div className="flex gap-1.5">
+                                {DIAS_SEMANA.map((dia) => {
+                                  const isActive = rec.dias?.includes(dia.key);
+                                  return (
+                                    <span
+                                      key={dia.key}
+                                      className={`inline-flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold transition-all ${
+                                        isActive
+                                          ? 'bg-primary-500 text-white shadow-sm scale-110'
+                                          : 'bg-gray-200 text-gray-400'
+                                      }`}
+                                      title={dia.nombre}
+                                    >
+                                      {dia.abrev}
+                                    </span>
+                                  );
+                                })}
+                              </div>
                             </div>
                           </div>
+                          
+                          <div className="flex items-center gap-2">
+                            <Button
+                              onClick={() => toggleRecordatorio(rec)}
+                              variant={rec.estaActivo ? 'primary' : 'outline'}
+                              size="sm"
+                              className="min-w-[90px]"
+                            >
+                              {rec.estaActivo ? '✓ Activo' : 'Inactivo'}
+                            </Button>
+                            <Button
+                              onClick={() => eliminarRecordatorio(rec.id)}
+                              variant="ghost"
+                              size="sm"
+                              className="hover:bg-nocumplido-50 hover:text-nocumplido-600"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            onClick={() => toggleRecordatorio(rec)}
-                            variant={rec.estaActivo ? 'primary' : 'outline'}
-                            size="sm"
-                          >
-                            {rec.estaActivo ? 'Activo' : 'Inactivo'}
-                          </Button>
-                          <Button
-                            onClick={() => eliminarRecordatorio(rec.id)}
-                            variant="ghost"
-                            size="sm"
-                          >
-                            <Trash2 className="w-4 h-4 text-nocumplido-600" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </main>
 
-        {/* Modal Nuevo Recordatorio */}
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Nuevo Recordatorio"
-        >
-          <div className="space-y-4">
+      {/* Modal Nuevo Recordatorio */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Crear Nuevo Recordatorio"
+      >
+        <div className="space-y-6">
+          {/* Hora */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Clock className="w-4 h-4 inline mr-1" />
+              Hora del recordatorio
+            </label>
             <Input
-              label="Hora del recordatorio"
               type="time"
               value={horaRecordatorio}
               onChange={(e) => setHoraRecordatorio(e.target.value)}
+              className="text-lg font-semibold"
             />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Días de la semana
-              </label>
-              <div className="flex gap-2 flex-wrap">
-                {DIAS_SEMANA.map((dia) => (
+          {/* Días de la semana */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Días de la semana
+            </label>
+            <div className="grid grid-cols-7 gap-2">
+              {DIAS_SEMANA.map((dia) => {
+                const isSelected = diasSeleccionados.includes(dia.key);
+                return (
                   <button
-                    key={dia.id}
+                    key={dia.key}
                     type="button"
-                    onClick={() => toggleDia(dia.id)}
-                    className={`px-4 py-2 rounded-lg border-2 font-medium transition-colors ${
-                      diasSeleccionados.includes(dia.id)
-                        ? 'bg-primary-500 text-white border-primary-500'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-primary-300'
+                    onClick={() => toggleDia(dia.key)}
+                    className={`flex flex-col items-center p-3 rounded-xl border-2 font-medium transition-all ${
+                      isSelected
+                        ? 'bg-primary-500 text-white border-primary-500 shadow-lg scale-105'
+                        : 'bg-white text-gray-700 border-gray-300 hover:border-primary-300 hover:bg-primary-50'
                     }`}
+                    title={dia.nombre}
                   >
-                    {dia.nombre}
+                    <span className="text-xs mb-1">{dia.abrev}</span>
+                    <span className="text-[10px] opacity-75">{dia.nombre.substring(0, 3)}</span>
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
+            <p className="text-xs text-gray-500 mt-2">
+              {diasSeleccionados.length === 0 
+                ? 'Selecciona al menos un día' 
+                : `${diasSeleccionados.length} día${diasSeleccionados.length > 1 ? 's' : ''} seleccionado${diasSeleccionados.length > 1 ? 's' : ''}`
+              }
+            </p>
+          </div>
 
-            {error && (
-              <p className="text-sm text-nocumplido-600 font-medium">
+          {/* Error */}
+          {error && (
+            <div className="p-4 bg-nocumplido-50 border-l-4 border-nocumplido-500 rounded-r-lg">
+              <p className="text-sm text-nocumplido-800 font-medium">
                 {error}
               </p>
-            )}
-
-            <div className="flex gap-3 pt-4">
-              <Button
-                onClick={handleGuardar}
-                variant="primary"
-                disabled={isSaving}
-                className="flex-1"
-              >
-                {isSaving ? 'Guardando...' : 'Guardar Recordatorio'}
-              </Button>
-              <Button
-                onClick={() => setIsModalOpen(false)}
-                variant="outline"
-                disabled={isSaving}
-              >
-                Cancelar
-              </Button>
             </div>
+          )}
+
+          {/* Botones */}
+          <div className="flex gap-3 pt-4 border-t">
+            <Button
+              onClick={handleGuardar}
+              variant="primary"
+              className="flex-1"
+              disabled={isSaving || diasSeleccionados.length === 0}
+            >
+              {isSaving ? 'Guardando...' : 'Crear Recordatorio'}
+            </Button>
+            <Button
+              onClick={() => setIsModalOpen(false)}
+              variant="outline"
+              disabled={isSaving}
+            >
+              Cancelar
+            </Button>
           </div>
-        </Modal>
-      </div>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -40,10 +40,6 @@ export default function Badge({ className, variant = 'default', customColor, ...
     borderColor: hexToRgba(customColor, 0.3), // 30% opacity para borde
   } : undefined;
 
-  if (customStyle) {
-    console.log('🎨 Badge customStyle:', customStyle);
-  }
-
   return (
     <span
       className={cn(

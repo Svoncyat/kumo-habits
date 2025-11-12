@@ -7,11 +7,13 @@ import Modal from '@/components/ui/Modal';
 import Badge from '@/components/ui/Badge';
 import { Plus, Edit, Trash2, Archive, Target, Search } from 'lucide-react';
 import { habitosService } from '@/services/habitos.service';
-import type { HabitoResponse, CrearHabitoRequest } from '@/types/api';
+import { categoriasService } from '@/services/categorias.service';
+import type { HabitoResponse, CrearHabitoRequest, CategoriaResponse } from '@/types/api';
 import { formatDate } from '@/lib/utils';
 
 export default function HabitosPage() {
   const [habitos, setHabitos] = useState<HabitoResponse[]>([]);
+  const [categorias, setCategorias] = useState<CategoriaResponse[]>([]);
   const [filteredHabitos, setFilteredHabitos] = useState<HabitoResponse[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showArchived, setShowArchived] = useState(false);
@@ -25,22 +27,36 @@ export default function HabitosPage() {
   
   // Form states
   const [nombre, setNombre] = useState('');
-  const [metaDiaria, setMetaDiaria] = useState('1');
+  const [metaDiaria, setMetaDiaria] = useState('');
+  const [estaArchivado, setEstaArchivado] = useState(false);
+  const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState<number[]>([]);
+  
+  // Validation & error states
+  const [errors, setErrors] = useState<{
+    nombre?: string;
+    metaDiaria?: string;
+    general?: string;
+  }>({});
 
   useEffect(() => {
-    cargarHabitos();
+    cargarDatos();
   }, []);
 
   useEffect(() => {
     filtrarHabitos();
   }, [habitos, searchQuery, showArchived]);
 
-  const cargarHabitos = async () => {
+  const cargarDatos = async () => {
     try {
-      const data = await habitosService.obtenerHabitos();
-      setHabitos(data);
+      setIsLoading(true);
+      const [habitosData, categoriasData] = await Promise.all([
+        habitosService.obtenerHabitos(),
+        categoriasService.obtenerCategorias(),
+      ]);
+      setHabitos(habitosData);
+      setCategorias(categoriasData);
     } catch (error) {
-      console.error('Error al cargar hábitos:', error);
+      console.error('Error al cargar datos:', error);
     } finally {
       setIsLoading(false);
     }
@@ -64,39 +80,80 @@ export default function HabitosPage() {
     setFilteredHabitos(filtered);
   };
 
+  const validateForm = (): boolean => {
+    const newErrors: typeof errors = {};
+    
+    // Validar nombre (3-100 caracteres)
+    if (!nombre.trim()) {
+      newErrors.nombre = 'El nombre es obligatorio';
+    } else if (nombre.trim().length < 3) {
+      newErrors.nombre = 'El nombre debe tener al menos 3 caracteres';
+    } else if (nombre.trim().length > 100) {
+      newErrors.nombre = 'El nombre no puede exceder 100 caracteres';
+    }
+    
+    // Validar meta diaria (opcional, pero si existe debe ser > 0)
+    if (metaDiaria && parseFloat(metaDiaria) <= 0) {
+      newErrors.metaDiaria = 'La meta diaria debe ser mayor que 0';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const resetForm = () => {
+    setNombre('');
+    setMetaDiaria('');
+    setEstaArchivado(false);
+    setCategoriasSeleccionadas([]);
+    setErrors({});
+  };
+
   const handleCreateHabito = async () => {
+    if (!validateForm()) return;
+    
     try {
       const data: CrearHabitoRequest = {
-        nombre,
-        metaDiaria: parseFloat(metaDiaria),
+        nombre: nombre.trim(),
+        metaDiaria: metaDiaria ? parseFloat(metaDiaria) : undefined,
+        estaArchivado,
+        categoriaIds: categoriasSeleccionadas.length > 0 ? categoriasSeleccionadas : undefined,
       };
       
       await habitosService.crearHabito(data);
-      await cargarHabitos();
-      
-      // Reset form
-      setNombre('');
-      setMetaDiaria('1');
+      await cargarDatos();
+      resetForm();
       setIsCreateModalOpen(false);
-    } catch (error) {
-      console.error('Error al crear hábito:', error);
+    } catch (error: any) {
+      // Manejar error 409 CONFLICT (nombre duplicado)
+      if (error.response?.status === 409) {
+        setErrors({ general: 'Ya existe un hábito con ese nombre' });
+      } else {
+        setErrors({ general: error.response?.data?.message || 'Error al crear el hábito' });
+      }
     }
   };
 
   const handleEditHabito = async () => {
-    if (!selectedHabito) return;
+    if (!selectedHabito || !validateForm()) return;
     
     try {
       await habitosService.actualizarHabito(selectedHabito.id, {
-        nombre,
-        metaDiaria: parseFloat(metaDiaria),
+        nombre: nombre.trim(),
+        metaDiaria: metaDiaria ? parseFloat(metaDiaria) : undefined,
+        categoriaIds: categoriasSeleccionadas.length > 0 ? categoriasSeleccionadas : undefined,
       });
       
-      await cargarHabitos();
+      await cargarDatos();
+      resetForm();
       setIsEditModalOpen(false);
       setSelectedHabito(null);
-    } catch (error) {
-      console.error('Error al actualizar hábito:', error);
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        setErrors({ general: 'Ya existe un hábito con ese nombre' });
+      } else {
+        setErrors({ general: error.response?.data?.message || 'Error al actualizar el hábito' });
+      }
     }
   };
 
@@ -105,7 +162,7 @@ export default function HabitosPage() {
     
     try {
       await habitosService.eliminarHabito(selectedHabito.id);
-      await cargarHabitos();
+      await cargarDatos();
       setIsDeleteModalOpen(false);
       setSelectedHabito(null);
     } catch (error) {
@@ -118,22 +175,37 @@ export default function HabitosPage() {
       await habitosService.actualizarHabito(habito.id, {
         estaArchivado: !habito.estaArchivado,
       });
-      await cargarHabitos();
+      await cargarDatos();
     } catch (error) {
       console.error('Error al archivar/desarchivar hábito:', error);
     }
+  };
+
+  const openCreateModal = () => {
+    resetForm();
+    setIsCreateModalOpen(true);
   };
 
   const openEditModal = (habito: HabitoResponse) => {
     setSelectedHabito(habito);
     setNombre(habito.nombre);
     setMetaDiaria(habito.metaDiaria.toString());
+    setCategoriasSeleccionadas(habito.categorias.map(c => c.id));
+    setErrors({});
     setIsEditModalOpen(true);
   };
 
   const openDeleteModal = (habito: HabitoResponse) => {
     setSelectedHabito(habito);
     setIsDeleteModalOpen(true);
+  };
+
+  const toggleCategoria = (categoriaId: number) => {
+    setCategoriasSeleccionadas(prev =>
+      prev.includes(categoriaId)
+        ? prev.filter(id => id !== categoriaId)
+        : [...prev, categoriaId]
+    );
   };
 
   if (isLoading) {
@@ -164,7 +236,7 @@ export default function HabitosPage() {
                 Gestiona y organiza tus hábitos diarios
               </p>
             </div>
-            <Button onClick={() => setIsCreateModalOpen(true)}>
+            <Button onClick={openCreateModal}>
               <Plus className="h-4 w-4 mr-2" />
               Nuevo Hábito
             </Button>
@@ -206,7 +278,7 @@ export default function HabitosPage() {
                   : 'Crea tu primer hábito para comenzar'}
               </p>
               {!searchQuery && (
-                <Button onClick={() => setIsCreateModalOpen(true)}>
+                <Button onClick={openCreateModal}>
                   <Plus className="h-4 w-4 mr-2" />
                   Crear Hábito
                 </Button>
@@ -286,11 +358,17 @@ export default function HabitosPage() {
       {/* Create Modal */}
       <Modal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={() => {
+          setIsCreateModalOpen(false);
+          resetForm();
+        }}
         title="Crear Nuevo Hábito"
         footer={
           <>
-            <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>
+            <Button variant="outline" onClick={() => {
+              setIsCreateModalOpen(false);
+              resetForm();
+            }}>
               Cancelar
             </Button>
             <Button onClick={handleCreateHabito}>
@@ -301,23 +379,78 @@ export default function HabitosPage() {
       >
         <div className="space-y-4">
           <Input
-            label="Nombre del Hábito"
+            label="Nombre del Hábito *"
             type="text"
             value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            onChange={(e) => {
+              setNombre(e.target.value);
+              if (errors.nombre) setErrors({ ...errors, nombre: undefined });
+            }}
             placeholder="Ej: Hacer ejercicio"
+            error={errors.nombre}
             required
           />
+          
           <Input
-            label="Meta Diaria"
+            label="Meta Diaria (opcional)"
             type="number"
             min="1"
-            step="1"
+            step="0.1"
             value={metaDiaria}
-            onChange={(e) => setMetaDiaria(e.target.value)}
+            onChange={(e) => {
+              setMetaDiaria(e.target.value);
+              if (errors.metaDiaria) setErrors({ ...errors, metaDiaria: undefined });
+            }}
+            placeholder="Ej: 1"
             helperText="Cuántas veces quieres realizar este hábito al día"
-            required
+            error={errors.metaDiaria}
           />
+
+          {/* Categorías */}
+          {categorias.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Categorías (opcional)
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {categorias.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => toggleCategoria(cat.id)}
+                    className={`px-3 py-1.5 rounded-lg border-2 text-sm font-medium transition-colors ${
+                      categoriasSeleccionadas.includes(cat.id)
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-primary-300'
+                    }`}
+                  >
+                    {cat.nombre}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Checkbox Archivado */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="estaArchivado"
+              checked={estaArchivado}
+              onChange={(e) => setEstaArchivado(e.target.checked)}
+              className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+            />
+            <label htmlFor="estaArchivado" className="text-sm text-gray-700">
+              Crear como archivado
+            </label>
+          </div>
+
+          {/* Error general */}
+          {errors.general && (
+            <div className="p-3 bg-nocumplido-50 border border-nocumplido-200 rounded-lg">
+              <p className="text-sm text-nocumplido-700">{errors.general}</p>
+            </div>
+          )}
         </div>
       </Modal>
 
@@ -327,11 +460,16 @@ export default function HabitosPage() {
         onClose={() => {
           setIsEditModalOpen(false);
           setSelectedHabito(null);
+          resetForm();
         }}
         title="Editar Hábito"
         footer={
           <>
-            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+            <Button variant="outline" onClick={() => {
+              setIsEditModalOpen(false);
+              setSelectedHabito(null);
+              resetForm();
+            }}>
               Cancelar
             </Button>
             <Button onClick={handleEditHabito}>
@@ -342,22 +480,63 @@ export default function HabitosPage() {
       >
         <div className="space-y-4">
           <Input
-            label="Nombre del Hábito"
+            label="Nombre del Hábito *"
             type="text"
             value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            onChange={(e) => {
+              setNombre(e.target.value);
+              if (errors.nombre) setErrors({ ...errors, nombre: undefined });
+            }}
             placeholder="Ej: Hacer ejercicio"
+            error={errors.nombre}
             required
           />
+          
           <Input
-            label="Meta Diaria"
+            label="Meta Diaria (opcional)"
             type="number"
             min="1"
-            step="1"
+            step="0.1"
             value={metaDiaria}
-            onChange={(e) => setMetaDiaria(e.target.value)}
-            required
+            onChange={(e) => {
+              setMetaDiaria(e.target.value);
+              if (errors.metaDiaria) setErrors({ ...errors, metaDiaria: undefined });
+            }}
+            placeholder="Ej: 1"
+            error={errors.metaDiaria}
           />
+
+          {/* Categorías */}
+          {categorias.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Categorías (opcional)
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {categorias.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => toggleCategoria(cat.id)}
+                    className={`px-3 py-1.5 rounded-lg border-2 text-sm font-medium transition-colors ${
+                      categoriasSeleccionadas.includes(cat.id)
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-primary-300'
+                    }`}
+                  >
+                    {cat.nombre}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Error general */}
+          {errors.general && (
+            <div className="p-3 bg-nocumplido-50 border border-nocumplido-200 rounded-lg">
+              <p className="text-sm text-nocumplido-700">{errors.general}</p>
+            </div>
+          )}
         </div>
       </Modal>
 

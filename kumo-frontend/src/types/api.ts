@@ -54,8 +54,9 @@ export interface HabitoResponse {
 
 export interface CrearHabitoRequest {
   nombre: string;
-  metaDiaria: number;
+  metaDiaria?: number;
   categoriaIds?: number[];
+  estaArchivado?: boolean;
 }
 
 export interface ActualizarHabitoRequest {
@@ -115,13 +116,15 @@ export interface MetaMensualResponse {
 export interface RecordatorioRequest {
   habitoId: number;
   horaRecordatorio: string; // LocalTime format: HH:mm:ss
-  diasSemana: number[]; // 1=Monday, 7=Sunday
-  estaActivo: boolean;
+  mensaje?: string;
+  dias: string[]; // ["LUNES", "MARTES", ...]
+  estaActivo?: boolean;
 }
 
 export interface RecordatorioUpdateRequest {
   horaRecordatorio?: string;
-  diasSemana?: number[];
+  mensaje?: string;
+  dias?: string[];
   estaActivo?: boolean;
 }
 
@@ -129,9 +132,11 @@ export interface RecordatorioResponse {
   id: number;
   habitoId: number;
   horaRecordatorio: string;
-  diasSemana: number[];
+  mensaje?: string;
+  dias: string[]; // ["LUNES", "MARTES", ...]
   estaActivo: boolean;
   fechaCreacion: string;
+  fechaModificacion?: string;
 }
 
 // ==================== UTILITY TYPES ====================
