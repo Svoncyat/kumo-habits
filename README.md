@@ -187,29 +187,6 @@ Todas las páginas están optimizadas para:
 - **[endpoints.md](kumo-backend/src/main/resources/endpoints.md)** - Listado de endpoints
 - Scripts SQL en `kumo-backend/src/main/resources/db/migration/`
 
-## 📈 Estado del Proyecto
-
-✅ **MVP Completo** - El proyecto cuenta con todas las funcionalidades principales implementadas:
-
-- ✅ Autenticación y autorización con JWT
-- ✅ CRUD de hábitos
-- ✅ Seguimiento diario
-- ✅ Métricas y rachas
-- ✅ Frontend moderno y responsive
-- ✅ Design system completo
-- ✅ Integración frontend-backend
-
-### 🚧 Mejoras Futuras
-
-- 📅 Vista de calendario para registros
-- 📊 Gráficos interactivos (Chart.js/Recharts)
-- 🔔 Sistema de notificaciones push
-- 📱 PWA (Progressive Web App)
-- 🌙 Modo oscuro
-- 🌍 Internacionalización (i18n)
-- 📤 Exportación de datos a CSV/PDF
-- 🧪 Tests unitarios y E2E
-
 ## 🎯 Flujo de Usuario
 
 1. **Registro/Login** → Crear cuenta o iniciar sesión
