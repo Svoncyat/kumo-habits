@@ -2,6 +2,7 @@ package com.kumo.www.feature.seguridad.controller.dto;
 
 import com.kumo.www.feature.seguridad.entity.enums.EstadoUsuario;
 import com.kumo.www.feature.seguridad.entity.enums.FormatoFecha;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,5 @@ public class PerfilResponse {
     private FormatoFecha formatoFecha;
     private EstadoUsuario estado;
     private List<String> roles;
+    private OffsetDateTime fechaRegistro;
 }

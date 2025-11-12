@@ -240,16 +240,16 @@ export default function PerfilPage() {
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-gray-600">Fecha de Registro:</span>
                 <span className="font-medium text-gray-900">
-                  {formatDate(user.fechaRegistro)}
+                  {user.fechaRegistro ? formatDate(user.fechaRegistro) : 'No disponible'}
                 </span>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-gray-600">Zona Horaria:</span>
-                <span className="font-medium text-gray-900">{user.zonaHoraria}</span>
+                <span className="font-medium text-gray-900">{user.zonaHoraria || 'No configurada'}</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-gray-600">Formato de Fecha:</span>
-                <span className="font-medium text-gray-900">{user.formatoFecha}</span>
+                <span className="font-medium text-gray-900">{user.formatoFecha || 'No configurado'}</span>
               </div>
             </div>
           </CardContent>

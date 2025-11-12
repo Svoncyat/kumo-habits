@@ -7,6 +7,7 @@
  */
 CREATE TABLE habito_metricas_calculadas (
     habito_id BIGINT PRIMARY KEY REFERENCES habitos(id) ON DELETE CASCADE,
+    version BIGINT NOT NULL DEFAULT 0,
     racha_mas_larga INT NOT NULL DEFAULT 0,
     total_dias_cumplidos INT NOT NULL DEFAULT 0,
     total_valor_acumulado NUMERIC(12, 2) NOT NULL DEFAULT 0,

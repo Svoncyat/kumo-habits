@@ -137,6 +137,7 @@ public class PerfilServiceImpl implements PerfilService {
                 .formatoFecha(preferencias != null ? preferencias.getFormatoFecha() : null)
                 .estado(usuario.getEstado())
                 .roles(roles)
+                .fechaRegistro(usuario.getFechaCreacion())
                 .build();
     }
 }

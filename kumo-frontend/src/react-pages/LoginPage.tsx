@@ -47,15 +47,10 @@ export default function LoginPage() {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Bienvenido a Kumo</h1>
-          <p className="text-gray-600 mt-2">Inicia sesión para continuar</p>
+          <p className="text-gray-600 mt-2">Ingresa tus credenciales para acceder</p>
         </div>
 
         <Card variant="elevated">
-          <CardHeader>
-            <CardTitle>Iniciar Sesión</CardTitle>
-            <CardDescription>Ingresa tus credenciales para acceder</CardDescription>
-          </CardHeader>
-
           <CardContent>
             {error && (
               <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 flex items-start gap-2">
@@ -72,7 +67,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu@email.com"
+                  placeholder="correo@kumo.pe"
                   required
                   className="pl-10"
                 />
@@ -108,7 +103,7 @@ export default function LoginPage() {
         </Card>
 
         <p className="text-center text-sm text-gray-500 mt-8">
-          © 2024 Kumo - UNSM · Tu compañero de hábitos
+          © 2025 Kumo - UNSM · Tu compañero de hábitos
         </p>
       </div>
     </div>

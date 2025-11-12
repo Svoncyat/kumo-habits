@@ -50,7 +50,7 @@ export default function ColoresDemo() {
             </div>
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <code className="text-xs">
-                {`<Badge customColor={categoria.color}>{categoria.nombre}</Badge>`}
+                {`<Badge customColor={categoria.colorHex}>{categoria.nombre}</Badge>`}
               </code>
             </div>
           </CardContent>
@@ -85,8 +85,8 @@ export default function ColoresDemo() {
             </div>
             <div className="flex flex-wrap gap-2">
               <Badge variant="cumplido">Cumplido</Badge>
-              <Badge variant="noCumplido">No Cumplido</Badge>
-              <Badge variant="sinRegistro">Sin Registro</Badge>
+              <Badge variant="nocumplido">No Cumplido</Badge>
+              <Badge variant="sinregistro">Sin Registro</Badge>
             </div>
           </CardContent>
         </Card>
@@ -162,9 +162,9 @@ export default function ColoresDemo() {
                       Cumplidos (#22c55e)
                     </p>
                   </div>
-                  <div className="p-4 rounded-lg bg-noCumplido-100 border-2 border-noCumplido-300">
-                    <div className="h-20 bg-noCumplido-500 rounded mb-2"></div>
-                    <p className="text-sm text-center text-noCumplido-900 font-medium">
+                  <div className="p-4 rounded-lg bg-nocumplido-100 border-2 border-nocumplido-300">
+                    <div className="h-20 bg-nocumplido-500 rounded mb-2"></div>
+                    <p className="text-sm text-center text-nocumplido-900 font-medium">
                       No Cumplidos (#ef4444)
                     </p>
                   </div>
@@ -220,8 +220,8 @@ export default function ColoresDemo() {
                   {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                     <div
                       key={shade}
-                      className={`h-12 flex-1 rounded bg-noCumplido-${shade}`}
-                      title={`noCumplido-${shade}`}
+                      className={`h-12 flex-1 rounded bg-nocumplido-${shade}`}
+                      title={`nocumplido-${shade}`}
                     />
                   ))}
                 </div>
@@ -234,8 +234,8 @@ export default function ColoresDemo() {
                   {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                     <div
                       key={shade}
-                      className={`h-12 flex-1 rounded bg-sinRegistro-${shade}`}
-                      title={`sinRegistro-${shade}`}
+                      className={`h-12 flex-1 rounded bg-sinregistro-${shade}`}
+                      title={`sinregistro-${shade}`}
                     />
                   ))}
                 </div>

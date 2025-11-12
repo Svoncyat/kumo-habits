@@ -241,7 +241,7 @@ export default function HabitosPage() {
                 <CardContent>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {habito.categorias.map((cat) => (
-                      <Badge key={cat.id} customColor={cat.color}>
+                      <Badge key={cat.id} customColor={cat.colorHex}>
                         {cat.nombre}
                       </Badge>
                     ))}

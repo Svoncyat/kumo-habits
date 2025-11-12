@@ -49,7 +49,7 @@ export function createColorVariants(hexColor: string) {
  * Obtiene el color principal de una categoría
  */
 export function getCategoriaColor(categoria: CategoriaResponse): string {
-  return categoria.color;
+  return categoria.colorHex;
 }
 
 /**
@@ -57,7 +57,7 @@ export function getCategoriaColor(categoria: CategoriaResponse): string {
  * RF-REP-VIS-003: En reportes comparativos, cada hábito debe ser representado por un color distinto
  */
 export function generateChartColors(categorias: CategoriaResponse[]): string[] {
-  return categorias.map((cat) => cat.color);
+  return categorias.map((cat) => cat.colorHex);
 }
 
 /**
@@ -67,7 +67,7 @@ export function getColorByNombre(
   categorias: CategoriaResponse[],
   nombre: string
 ): string | undefined {
-  return categorias.find((cat) => cat.nombre === nombre)?.color;
+  return categorias.find((cat) => cat.nombre === nombre)?.colorHex;
 }
 
 /**
@@ -90,6 +90,6 @@ export const DEFAULT_CHART_COLORS = [
  */
 export const CHART_ESTADO_COLORS = {
   cumplido: '#22c55e', // Verde (cumplido-500)
-  noCumplido: '#ef4444', // Rojo (noCumplido-500)
-  sinRegistro: '#9ca3af', // Gris (sinRegistro-400)
+  nocumplido: '#ef4444', // Rojo (nocumplido-500)
+  sinregistro: '#9ca3af', // Gris (sinregistro-400)
 } as const;

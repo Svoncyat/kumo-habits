@@ -158,7 +158,7 @@ export default function MetricasPage() {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {habito.categorias.map((cat) => (
-                        <Badge key={cat.id} customColor={cat.color}>
+                        <Badge key={cat.id} customColor={cat.colorHex}>
                           {cat.nombre}
                         </Badge>
                       ))}

@@ -28,7 +28,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
             'disabled:cursor-not-allowed disabled:opacity-50',
             // RF-AUT-REG-005: Campos inválidos con borde rojo
-            error && 'border-noCumplido-500 focus-visible:ring-noCumplido-500',
+            error && 'border-nocumplido-500 focus-visible:ring-nocumplido-500',
             className
           )}
           aria-invalid={error ? 'true' : 'false'}
@@ -36,7 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <p id={`${inputId}-error`} className="mt-1 text-sm text-noCumplido-600 font-medium">
+          <p id={`${inputId}-error`} className="mt-1 text-sm text-nocumplido-600 font-medium">
             {error}
           </p>
         )}

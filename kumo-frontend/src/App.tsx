@@ -8,6 +8,7 @@ import RegisterPage from './react-pages/RegisterPage';
 import DashboardPage from './react-pages/DashboardPage';
 import HabitosPage from './react-pages/HabitosPage';
 import MetricasPage from './react-pages/MetricasPage';
+import RecordatoriosPage from './react-pages/RecordatoriosPage';
 import PerfilPage from './react-pages/PerfilPage';
 import ColoresDemoPage from './react-pages/ColoresDemoPage';
 
@@ -92,6 +93,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MetricasPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/recordatorios"
+        element={
+          <ProtectedRoute>
+            <RecordatoriosPage />
           </ProtectedRoute>
         }
       />

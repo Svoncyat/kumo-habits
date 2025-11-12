@@ -29,8 +29,8 @@ export default function CalendarioDia({
 }: CalendarioDiaProps) {
   const estadoStyles = {
     cumplido: 'bg-cumplido-100 text-cumplido-900 border-cumplido-300 hover:bg-cumplido-200',
-    noCumplido: 'bg-noCumplido-100 text-noCumplido-900 border-noCumplido-300 hover:bg-noCumplido-200',
-    sinRegistro: 'bg-sinRegistro-50 text-sinRegistro-600 border-sinRegistro-200 hover:bg-sinRegistro-100',
+    noCumplido: 'bg-nocumplido-100 text-nocumplido-900 border-nocumplido-300 hover:bg-nocumplido-200',
+    sinRegistro: 'bg-sinregistro-50 text-sinregistro-600 border-sinregistro-200 hover:bg-sinregistro-100',
     futuro: 'bg-white text-gray-400 border-gray-100 cursor-not-allowed opacity-60',
   };
 

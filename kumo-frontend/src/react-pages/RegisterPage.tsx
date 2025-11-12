@@ -73,11 +73,6 @@ export default function RegisterPage() {
         </div>
 
         <Card variant="elevated">
-          <CardHeader>
-            <CardTitle>Crear Cuenta</CardTitle>
-            <CardDescription>Completa tus datos para registrarte</CardDescription>
-          </CardHeader>
-
           <CardContent>
             {error && (
               <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 flex items-start gap-2">
@@ -107,7 +102,7 @@ export default function RegisterPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu@email.com"
+                  placeholder="correo@kumo.pe"
                   required
                   className="pl-10"
                 />
@@ -129,7 +124,7 @@ export default function RegisterPage() {
                         Seguridad: {passwordStrength()}
                       </span>
                     ) : (
-                      'Mínimo 6 caracteres'
+                      'Mínimo 8 caracteres'
                     )
                   }
                 />
@@ -168,7 +163,7 @@ export default function RegisterPage() {
         </Card>
 
         <p className="text-center text-sm text-gray-500 mt-8">
-          © 2024 Kumo - UNSM · Tu compañero de hábitos
+          © 2025 Kumo - UNSM · Tu compañero de hábitos
         </p>
       </div>
     </div>

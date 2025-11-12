@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
@@ -49,4 +50,8 @@ public class HabitoMetricasCalculadas {
 
     @Column(name = "fecha_ultima_actualizacion")
     private OffsetDateTime fechaUltimaActualizacion;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
 }

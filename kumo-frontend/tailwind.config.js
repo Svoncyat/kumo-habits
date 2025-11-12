@@ -1,6 +1,25 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  safelist: [
+    // Safelist para colores personalizados
+    {
+      pattern:
+        /^(bg|text|border|ring|shadow)-(cumplido|nocumplido|sinregistro|racha)-(50|100|200|300|400|500|600|700|800|900)$/,
+    },
+    {
+      pattern:
+        /^hover:(bg|text|border)-(cumplido|nocumplido|sinregistro|racha)-(50|100|200|300|400|500|600|700|800|900)$/,
+    },
+    {
+      pattern:
+        /^(from|to|via)-(cumplido|nocumplido|sinregistro|racha)-(50|100|200|300|400|500|600|700|800|900)$/,
+    },
+    // Clases específicas para gradientes y sombras
+    "shadow-racha-500/30",
+    "fill-current",
+    "animate-pulse",
+  ],
   theme: {
     extend: {
       colors: {
@@ -30,7 +49,7 @@ export default {
           900: "#581c87",
           950: "#3b0764",
         },
-        // Estados de calendario según SRS
+        // Estados de calendario según SRS (nombres en minúsculas para compatibilidad)
         cumplido: {
           50: "#f0fdf4",
           100: "#dcfce7",
@@ -43,7 +62,7 @@ export default {
           800: "#166534",
           900: "#14532d",
         },
-        noCumplido: {
+        nocumplido: {
           50: "#fef2f2",
           100: "#fee2e2",
           200: "#fecaca",
@@ -55,7 +74,7 @@ export default {
           800: "#991b1b",
           900: "#7f1d1d",
         },
-        sinRegistro: {
+        sinregistro: {
           50: "#f9fafb",
           100: "#f3f4f6",
           200: "#e5e7eb",

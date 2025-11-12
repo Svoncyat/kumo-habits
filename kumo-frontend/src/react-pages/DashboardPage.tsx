@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const [habitos, setHabitos] = useState<HabitoResponse[]>([]);
   const [registrosHoy, setRegistrosHoy] = useState<RegistroResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [marcandoHabito, setMarcandoHabito] = useState<number | null>(null);
 
   useEffect(() => {
     cargarDatos();
@@ -52,19 +53,57 @@ export default function DashboardPage() {
     const hoy = new Date().toISOString().split('T')[0];
     const habito = habitos.find(h => h.id === habitoId);
     
-    if (!habito) return;
+    if (!habito) {
+      console.error('❌ Hábito no encontrado:', habitoId);
+      return;
+    }
+
+    // Verificar si ya está marcado
+    const registroExistente = registrosHoy.find(r => r.habitoId === habitoId);
+    if (registroExistente?.estaCumplido) {
+      console.log('ℹ️ El hábito ya está marcado como completado');
+      alert('Este hábito ya está marcado como completado hoy');
+      return;
+    }
+
+    console.log('🔄 Marcando hábito como completado:', {
+      habitoId,
+      habitoNombre: habito.nombre,
+      fecha: hoy,
+      metaDiaria: habito.metaDiaria,
+    });
+
+    setMarcandoHabito(habitoId);
 
     try {
-      await seguimientoService.crearRegistro({
+      const registroData = {
         habitoId,
         fechaRegistro: hoy,
         valorRegistrado: habito.metaDiaria,
         estaCumplido: true,
-      });
+      };
+      
+      console.log('📤 Enviando registro:', registroData);
+      
+      const resultado = await seguimientoService.crearRegistro(registroData);
+      
+      console.log('✅ Registro creado exitosamente:', resultado);
       
       await cargarDatos();
-    } catch (error) {
-      console.error('Error al marcar hábito:', error);
+      
+      console.log('🔄 Datos recargados');
+    } catch (error: any) {
+      console.error('❌ Error al marcar hábito:', error);
+      
+      // Mostrar error al usuario
+      const errorMessage = error.response?.data?.message 
+        || error.response?.data?.error 
+        || error.message 
+        || 'Error desconocido';
+      
+      alert(`Error al marcar hábito: ${errorMessage}`);
+    } finally {
+      setMarcandoHabito(null);
     }
   };
 
@@ -92,7 +131,7 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            ¡Hola, {user?.nombre}! 👋
+            ¡Hola, {user?.nombre}! 
           </h1>
           <p className="text-gray-600 mt-2">
             {new Date().toLocaleDateString('es-ES', { 
@@ -211,7 +250,7 @@ export default function DashboardPage() {
                     <CardContent>
                       <div className="flex flex-wrap gap-2 mb-4">
                         {habito.categorias.map((cat) => (
-                          <Badge key={cat.id} variant="info">
+                          <Badge key={cat.id} customColor={cat.colorHex}>
                             {cat.nombre}
                           </Badge>
                         ))}
@@ -223,9 +262,19 @@ export default function DashboardPage() {
                           variant="primary"
                           size="sm"
                           className="w-full"
+                          disabled={marcandoHabito === habito.id}
                         >
-                          <CheckCircle2 className="h-4 w-4 mr-2" />
-                          Marcar como Completado
+                          {marcandoHabito === habito.id ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                              Guardando...
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle2 className="h-4 w-4 mr-2" />
+                              Marcar como Completado
+                            </>
+                          )}
                         </Button>
                       ) : (
                         <div className="flex items-center justify-center gap-2 text-green-700 font-medium">

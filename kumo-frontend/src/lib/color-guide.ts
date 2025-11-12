@@ -16,7 +16,7 @@
  * 
  * Uso:
  * ```tsx
- * <Badge customColor={categoria.color}>
+ * <Badge customColor={categoria.colorHex}>
  *   {categoria.nombre}
  * </Badge>
  * ```
@@ -127,7 +127,7 @@
  * 
  * Badge:
  * - variant="cumplido" | "noCumplido" | "sinRegistro"
- * - customColor={categoria.color} // Para colores dinámicos
+ * - customColor={categoria.colorHex} // Para colores dinámicos
  * 
  * CalendarioDia:
  * - estado="cumplido" | "noCumplido" | "sinRegistro" | "futuro"

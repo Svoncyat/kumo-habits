@@ -23,7 +23,7 @@ export interface PerfilResponse {
   email: string;
   zonaHoraria: string;
   formatoFecha: string;
-  fechaRegistro: string;
+  fechaRegistro?: string; // Optional to handle missing field gracefully
 }
 
 export interface ActualizarPerfilRequest {
@@ -38,7 +38,7 @@ export interface ActualizarPerfilRequest {
 export interface CategoriaResponse {
   id: number;
   nombre: string;
-  color: string;
+  colorHex: string;
   icono?: string;
 }
 

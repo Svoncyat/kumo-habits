@@ -17,7 +17,7 @@ import { CHART_ESTADO_COLORS } from '@/lib/colors';
 export interface DatosGraficoBarras {
   fecha: string;
   cumplidos: number;
-  noCumplidos: number;
+  nocumplidos: number;
 }
 
 export interface DatosGraficoLinea {
@@ -28,7 +28,7 @@ export interface DatosGraficoLinea {
 export interface ConfiguracionGrafico {
   colores: {
     cumplido: string;
-    noCumplido: string;
+    nocumplido: string;
     categorias: Record<number, string>; // categoriaId -> color
   };
 }
@@ -42,13 +42,13 @@ export function generarConfiguracionGrafico(
   const coloresCategorias: Record<number, string> = {};
   
   categorias.forEach((cat) => {
-    coloresCategorias[cat.id] = cat.color;
+    coloresCategorias[cat.id] = cat.colorHex;
   });
 
   return {
     colores: {
       cumplido: CHART_ESTADO_COLORS.cumplido,
-      noCumplido: CHART_ESTADO_COLORS.noCumplido,
+      nocumplido: CHART_ESTADO_COLORS.nocumplido,
       categorias: coloresCategorias,
     },
   };
